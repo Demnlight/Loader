@@ -5,10 +5,14 @@
 
 class CLoadingForm : public IForm {
 public:
-	CLoadingForm( );
+	CLoadingForm(  );
 
 	void Render( ) override;
+
 	void Reset( ) override;
+	void Animate( ) override;
 
 private:
+
+	std::string LoadingLabel = "";
 };

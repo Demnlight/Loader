@@ -851,7 +851,7 @@ float GetMonitorScalingRatio( HMONITOR monitor ) {
 }
 
 float GetRealDpiForMonitor( HMONITOR monitor ) {
-    return GetDpiForSystem( ) / 96.0f / GetMonitorScalingRatio( monitor );
+    return GetDpiForSystem( ) / 56.0f / GetMonitorScalingRatio( monitor );
 }
 
 float ImGui_ImplWin32_GetDpiScaleForMonitor(void* monitor)

@@ -3,11 +3,13 @@
 enum FORMS_ID : int {
 	LOGIN,
 	LOADING,
+	CONNECTING,
 };
 
 class IFormAnimation {
 public:
 	virtual void Reset( ) = 0;
+	virtual void Animate( ) = 0;
 protected:
 	float flAnimationTime = 0.0f;
 	bool bAnimationCompleted = false;

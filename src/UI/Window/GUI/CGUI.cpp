@@ -10,7 +10,7 @@ const int DEFAULT_FONT_SIZE = 14;
 
 void CGUI::Render( ) {
 	ImGui::SetNextWindowPos( { 0, 0 } );
-	ImGui::SetNextWindowSize( this->RenderData.vWindowSize * ImGui::GetDPI( ) );
+	ImGui::SetNextWindowSize( this->RenderData.vWindowSize );
 	ImGui::Begin( ( "Laconism" ), 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoSavedSettings );
 	{
 		this->FormManager.GetCurrentForm( )->Render( );
@@ -112,4 +112,6 @@ void CGUI::InitColors( ) {
 	style->FrameRounding = 4.f;
 	style->ScrollbarSize = 10.f;
 	style->ScrollbarRounding = 12.f;
+
+	style->ScaleAllSizes( ImGui::GetDPI( ) );
 }

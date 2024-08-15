@@ -196,6 +196,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\UI\Window\GUI\Forms\Connecting\CConnectingForm.cpp" />
+    <ClCompile Include="src\UI\Window\GUI\ImGuiWrapper\CImGuiWrapper.cpp" />
     <ClCompile Include="src\UI\Window\GUI\Forms\Loading\CLoadingForm.cpp" />
     <ClCompile Include="src\UI\Window\GUI\CFormManager.cpp" />
     <ClCompile Include="src\UI\Window\GUI\Forms\Login\CLoginForm.cpp" />
@@ -213,6 +215,8 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\UI\Window\GUI\Forms\Connecting\CConnectingForm.h" />
+    <ClInclude Include="src\UI\Window\GUI\ImGuiWrapper\CImGuiWrapper.h" />
     <ClInclude Include="src\UI\Window\GUI\Forms\Loading\CLoadingForm.h" />
     <ClInclude Include="src\UI\Window\GUI\CFormManager.h" />
     <ClInclude Include="src\UI\Window\GUI\Forms\Login\CLoginForm.h" />

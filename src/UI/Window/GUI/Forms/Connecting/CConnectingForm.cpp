@@ -1,4 +1,4 @@
-#include "CLoadingForm.h"
+#include "CConnectingForm.h"
 
 #include <Dependencies/ImGui/imgui.h>
 #include <Dependencies/ImGui/imgui_internal.h>
@@ -7,11 +7,11 @@
 
 #include <Windows.h>
 
-CLoadingForm::CLoadingForm( ) {
+CConnectingForm::CConnectingForm( ) {
 	this->Reset( );
 }
 
-void CLoadingForm::Render( ) {
+void CConnectingForm::Render( ) {
 	this->Animate( );
 
 	ImVec2 wp = ImGui::GetWindowPos( );
@@ -20,11 +20,20 @@ void CLoadingForm::Render( ) {
 	g_ImGuiWrapper->Spinner( this->LoadingLabel.c_str( ), ImGui::GetWindowWidth( ) / 4 * ImGui::GetDPI( ), static_cast< int >( 4.0f * ImGui::GetDPI( ) ), ImColor( 255, 255, 255, 255 ), wp + ws / 2 );
 }
 
-void CLoadingForm::Animate( ) {
+void CConnectingForm::Animate( ) {
 	this->flAnimationTime += 1.0f * ImGui::GetIO( ).DeltaTime;
+
+	if ( strcmp( this->LoadingLabel.c_str( ), "Connecting" ) >= 0 ) {
+		switch ( static_cast< int >( this->flAnimationTime ) % 3 ) {
+		case 0: this->LoadingLabel = "Connecting."; break;
+		case 1: this->LoadingLabel = "Connecting.."; break;
+		case 2: this->LoadingLabel = "Connecting..."; break;
+		default: break;
+		}
+	}
 }
 
-void CLoadingForm::Reset( ) {
+void CConnectingForm::Reset( ) {
 	this->flAnimationTime = 0.0f;
 	this->bAnimationCompleted = false;
 }

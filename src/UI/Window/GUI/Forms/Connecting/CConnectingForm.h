@@ -3,9 +3,9 @@
 
 #include <string>
 
-class CLoginForm : public IForm {
+class CConnectingForm : public IForm {
 public:
-	CLoginForm( );
+	CConnectingForm( );
 
 	void Render( ) override;
 
@@ -13,6 +13,6 @@ public:
 	void Animate( ) override;
 
 private:
-	std::string szUserName;
-	std::string szPass;
+
+	std::string LoadingLabel = "Connecting";
 };

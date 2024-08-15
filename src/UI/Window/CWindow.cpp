@@ -14,7 +14,7 @@ void CWindow::Create( ) {
 
 	WNDCLASSEX windowClass;
 	windowClass.cbSize = sizeof( WNDCLASSEX );
-	windowClass.style = CS_CLASSDC;
+	windowClass.style = CS_HREDRAW | CS_VREDRAW;
 	windowClass.lpfnWndProc = WndProc;
 	windowClass.cbClsExtra = 0;
 	windowClass.cbWndExtra = 0;
@@ -28,7 +28,7 @@ void CWindow::Create( ) {
 
 	RegisterClassEx( &windowClass );
 
-	this->Data.hwnd = ::CreateWindow( windowClass.lpszClassName, this->Data.szName.c_str( ), WS_POPUP,
+	this->Data.hwnd = ::CreateWindowExA( WS_EX_APPWINDOW, windowClass.lpszClassName, this->Data.szName.c_str( ), WS_POPUP,
 		desktop.right / 2 - this->Data.vSize.x / 2,
 		desktop.bottom / 2 - this->Data.vSize.y / 2,
 		this->Data.vSize.x, this->Data.vSize.y, NULL, NULL, windowClass.hInstance, NULL );

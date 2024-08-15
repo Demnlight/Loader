@@ -30,5 +30,5 @@ public:
 	IForm* GetCurrentForm( ) override;
 
 private:
-	FORMS_ID eCurrentForm = FORMS_ID::LOGIN;
+	FORMS_ID eCurrentForm = FORMS_ID::CONNECTING;
 };

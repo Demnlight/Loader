@@ -841,6 +841,19 @@ void ImGui_ImplWin32_EnableDpiAwareness()
 #pragma comment(lib, "gdi32")   // Link with gdi32.lib for GetDeviceCaps(). MinGW will require linking with '-lgdi32'
 #endif
 
+float GetMonitorScalingRatio( HMONITOR monitor ) {
+    MONITORINFOEX info = { sizeof( MONITORINFOEX ) };
+    GetMonitorInfo( monitor, &info );
+    DEVMODE devmode = {};
+    devmode.dmSize = sizeof( DEVMODE );
+    EnumDisplaySettings( info.szDevice, ENUM_CURRENT_SETTINGS, &devmode );
+    return ( info.rcMonitor.right - info.rcMonitor.left ) / static_cast< float >( devmode.dmPelsWidth );
+}
+
+float GetRealDpiForMonitor( HMONITOR monitor ) {
+    return GetDpiForSystem( ) / 96.0 / GetMonitorScalingRatio( monitor );
+}
+
 float ImGui_ImplWin32_GetDpiScaleForMonitor(void* monitor)
 {
     UINT xdpi = 96, ydpi = 96;
@@ -869,8 +882,11 @@ float ImGui_ImplWin32_GetDpiScaleForMonitor(void* monitor)
 
 float ImGui_ImplWin32_GetDpiScaleForHwnd(void* hwnd)
 {
-    HMONITOR monitor = ::MonitorFromWindow((HWND)hwnd, MONITOR_DEFAULTTONEAREST);
-    return ImGui_ImplWin32_GetDpiScaleForMonitor(monitor);
+    HMONITOR monitor = ::MonitorFromWindow( ( HWND )hwnd, MONITOR_DEFAULTTONEAREST );
+    return GetRealDpiForMonitor( monitor );
+
+    //HMONITOR monitor = ::MonitorFromWindow((HWND)hwnd, MONITOR_DEFAULTTONEAREST);
+    //return ImGui_ImplWin32_GetDpiScaleForMonitor(monitor);
 }
 
 //---------------------------------------------------------------------------------------------------------

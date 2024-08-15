@@ -7,7 +7,11 @@ int APIENTRY WinMain( HINSTANCE hInst, HINSTANCE hInstPrev, PSTR Line, int Show 
 		Vector2( 200, 200 )
 	) );
 
+	std::unique_ptr<CGUI> pGUI = std::make_unique<CGUI>( );
+
 	pWindow->Create( );
+
+	pWindow->SetupGUI( pGUI.get( ) );
 	pWindow->SetupImGui( );
 
 	pWindow->Show( );

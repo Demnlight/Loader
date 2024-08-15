@@ -10,9 +10,7 @@ protected:
 		LPDIRECT3D9 D3D;
 		LPDIRECT3DDEVICE9 Device;
 		D3DPRESENT_PARAMETERS PresentParams;
-		POINTS vPosition;
-		HWND hwnd = nullptr;
+
 		void ResetDevice( );
-	};
-	static inline DeviceData_t DeviceData;
+	} DeviceData;
 };

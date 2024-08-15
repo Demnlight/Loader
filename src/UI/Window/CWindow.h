@@ -6,10 +6,13 @@
 
 #include "Decorator.h"
 #include "Device.h"
+#include "GUI/CGUI.h"
 
 class WindowData_t {
 public:
-	WindowData_t( ) { };
+	WindowData_t( ) { 
+		vPosition = {};
+	};
 
 	WindowData_t( 
 		 std::string szName,
@@ -21,6 +24,8 @@ public:
 
 	std::string szName;
 	Vector2 vSize;
+	POINTS vPosition;
+	HWND hwnd = nullptr;
 };
 
 class IWindow {
@@ -36,7 +41,7 @@ protected:
 	WindowData_t Data;
 };
 
-class CWindow : IWindow, IWindowDecorator, IDevice {
+class CWindow : IWindow, IWindowDecorator, IDevice, IGUIManager {
 public:
 	CWindow( ) = delete;
 
@@ -67,6 +72,8 @@ public:
 
 	void SetupImGui( ) override;
 
-	static LRESULT WINAPI WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
+	void SetupGUI( IGUI* source ) override;
+
+	LRESULT WINAPI WindowProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
 private:
 };

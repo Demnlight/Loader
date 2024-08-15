@@ -196,6 +196,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\UI\Window\GUI\CGUI.cpp" />
     <ClCompile Include="Dependencies\ImGui\backends\imgui_impl_dx9.cpp" />
     <ClCompile Include="Dependencies\ImGui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="Dependencies\ImGui\freetype\imgui_freetype.cpp" />
@@ -209,6 +210,9 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Dependencies\Bytes\Fonts\MenuIcons.h" />
+    <ClInclude Include="Dependencies\Bytes\Fonts\SFPRO.h" />
+    <ClInclude Include="src\UI\Window\GUI\CGUI.h" />
     <ClInclude Include="Dependencies\ImGui\backends\imgui_impl_dx9.h" />
     <ClInclude Include="Dependencies\ImGui\backends\imgui_impl_win32.h" />
     <ClInclude Include="Dependencies\ImGui\freetype\imgui_freetype.h" />
@@ -223,6 +227,7 @@
     <ClInclude Include="src\UI\Window\CWindow.h" />
     <ClInclude Include="Dependencies\Vector\Vector.h" />
     <ClInclude Include="src\UI\Window\Device.h" />
+    <ClInclude Include="src\UI\Window\WndProc.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

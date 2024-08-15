@@ -1,4 +1,4 @@
-#include "CWindow.h"
+#include "WndProc.h"
 
 #include <Dependencies/ImGui/backends/imgui_impl_win32.h>
 #include <Dependencies/ImGui/backends/imgui_impl_dx9.h>
@@ -10,17 +10,36 @@ void CWindow::Create( ) {
 	const HWND hDesktop = GetDesktopWindow( );
 	GetWindowRect( hDesktop, &desktop );
 
-	WNDCLASSEX wc = { sizeof( WNDCLASSEX ), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle( NULL ), NULL, NULL, NULL, NULL, this->Data.szName.c_str( ), NULL };
-	::RegisterClassEx( &wc );
+	WNDCLASSEX windowClass;
+	windowClass.cbSize = sizeof( WNDCLASSEX );
+	windowClass.style = CS_CLASSDC;
+	windowClass.lpfnWndProc = WndProc;
+	windowClass.cbClsExtra = 0;
+	windowClass.cbWndExtra = 0;
+	windowClass.hInstance = GetModuleHandleA( 0 );
+	windowClass.hIcon = 0;
+	windowClass.hCursor = 0;
+	windowClass.hbrBackground = 0;
+	windowClass.lpszMenuName = 0;
+	windowClass.lpszClassName = "Laconism";
+	windowClass.hIconSm = 0;
 
-	DeviceData.hwnd = ::CreateWindow( wc.lpszClassName, this->Data.szName.c_str( ), WS_POPUP,
+	RegisterClassEx( &windowClass );
+
+	this->Data.hwnd = ::CreateWindow( windowClass.lpszClassName, this->Data.szName.c_str( ), WS_POPUP,
 		desktop.right / 2 - this->Data.vSize.x / 2,
 		desktop.bottom / 2 - this->Data.vSize.y / 2,
-		this->Data.vSize.x, this->Data.vSize.y, NULL, NULL, wc.hInstance, NULL );
+		this->Data.vSize.x, this->Data.vSize.y, NULL, NULL, windowClass.hInstance, NULL );
 
-	if ( !CreateDeviceD3D( DeviceData.hwnd ) ) {
+	SetWindowLongPtr( this->Data.hwnd, GWLP_USERDATA, (LONG_PTR)this );
+
+	this->DecoratorData.flDPIScale = ImGui_ImplWin32_GetDpiScaleForHwnd( this->Data.hwnd );
+	this->Data.vSize *= this->DecoratorData.flDPIScale;
+	SetWindowPos( this->Data.hwnd, 0, 0, 0, this->Data.vSize.x, this->Data.vSize.y, SWP_NOMOVE );
+
+	if ( !CreateDeviceD3D( this->Data.hwnd ) ) {
 		CleanupDeviceD3D( );
-		::UnregisterClass( wc.lpszClassName, wc.hInstance );
+		::UnregisterClass( windowClass.lpszClassName, windowClass.hInstance );
 		throw std::exception( "Failed to init D3DDevice" );
 		return;
 	}
@@ -75,28 +94,29 @@ void CWindow::Handler( ) {
 
 void CWindow::SetupImGui( ) {
 	ImGui::CreateContext( );
-	/*this->m_ImGuiData.io = &ImGui::GetIO( );
-	this->m_ImGuiData.io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-	this->m_ImGuiData.io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-	this->m_ImGuiData.io->IniFilename = nullptr;
+	this->DecoratorData.io = &ImGui::GetIO( );
+	this->DecoratorData.io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	this->DecoratorData.io->IniFilename = nullptr;
 
-	this->m_ImGuiData.DPIScale = ImGui_ImplWin32_GetDpiScaleForHwnd( this->m_WindowData.hWindow );
+	if ( this->pGUI ) {
+		this->pGUI->SetDPIScale( this->DecoratorData.flDPIScale );
 
-	this->GUI->InitColors( );
-	this->GUI->InitFonts( );*/
+		this->pGUI->InitColors( );
+		this->pGUI->InitFonts( );
+	}
 
-	ImGui_ImplWin32_Init( DeviceData.hwnd );
+	ImGui_ImplWin32_Init( this->Data.hwnd );
 	ImGui_ImplDX9_Init( DeviceData.Device );
 }
 
 void CWindow::Show( ) {
-	::ShowWindow( DeviceData.hwnd, SW_SHOWDEFAULT );
-	::UpdateWindow( DeviceData.hwnd );
+	::ShowWindow( this->Data.hwnd, SW_SHOWDEFAULT );
+	::UpdateWindow( this->Data.hwnd );
 }
 
 void CWindow::Hide( ) {
-	::ShowWindow( DeviceData.hwnd, SW_HIDE );
-	::UpdateWindow( DeviceData.hwnd );
+	::ShowWindow( this->Data.hwnd, SW_HIDE );
+	::UpdateWindow( this->Data.hwnd );
 }
 
 void CWindow::Destroy( ) {
@@ -105,12 +125,12 @@ void CWindow::Destroy( ) {
 	ImGui::DestroyContext( );
 
 	CleanupDeviceD3D( );
-	::DestroyWindow( DeviceData.hwnd );
+	::DestroyWindow( this->Data.hwnd );
 	::UnregisterClass( this->Data.szName.c_str( ), GetModuleHandle( NULL ) );
 }
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
-LRESULT WINAPI CWindow::WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam ) {
+LRESULT WINAPI CWindow::WindowProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam ) {
 	if ( ImGui_ImplWin32_WndProcHandler( hWnd, msg, wParam, lParam ) )
 		return true;
 
@@ -138,7 +158,7 @@ LRESULT WINAPI CWindow::WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 		break;
 	case WM_LBUTTONDOWN:
 	{
-		DeviceData.vPosition = MAKEPOINTS( lParam ); // set click points
+		this->Data.vPosition = MAKEPOINTS( lParam ); // set click points
 	}return 0;
 
 	case WM_MOUSEMOVE:
@@ -147,16 +167,16 @@ LRESULT WINAPI CWindow::WndProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 			const auto points = MAKEPOINTS( lParam );
 			auto rect = ::RECT{ };
 
-			GetWindowRect( DeviceData.hwnd, &rect );
+			GetWindowRect( this->Data.hwnd, &rect );
 
-			rect.left += points.x - DeviceData.vPosition.x;
-			rect.top += points.y - DeviceData.vPosition.y;
+			rect.left += points.x - this->Data.vPosition.x;
+			rect.top += points.y - this->Data.vPosition.y;
 
-			if ( DeviceData.vPosition.x >= 0 &&
-				DeviceData.vPosition.x <= 200 &&
-				DeviceData.vPosition.y >= 0 && DeviceData.vPosition.y <= 19 )
+			if ( this->Data.vPosition.x >= 0 &&
+				this->Data.vPosition.x <= 200 &&
+				this->Data.vPosition.y >= 0 && this->Data.vPosition.y <= 19 )
 				SetWindowPos(
-				DeviceData.hwnd,
+				this->Data.hwnd,
 				HWND_TOPMOST,
 				rect.left,
 				rect.top,
@@ -200,3 +220,8 @@ void CWindow::DeviceData_t::ResetDevice( ) {
 
 	ImGui_ImplDX9_CreateDeviceObjects( );
 }
+
+void CWindow::SetupGUI( IGUI* source ) {
+	if ( source )
+		this->pGUI = source;
+};

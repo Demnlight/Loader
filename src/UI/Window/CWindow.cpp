@@ -28,9 +28,12 @@ void CWindow::Create( ) {
 
 	RegisterClassEx( &windowClass );
 
+	long WindowPosCenterX = desktop.right / 2 - this->Data.vSize.x / 2;
+	long WindowPosCenterY = desktop.bottom / 2 - this->Data.vSize.y / 2;
+
 	this->Data.hwnd = ::CreateWindowExA( WS_EX_APPWINDOW, windowClass.lpszClassName, this->Data.szName.c_str( ), WS_POPUP,
-		desktop.right / 2 - this->Data.vSize.x / 2,
-		desktop.bottom / 2 - this->Data.vSize.y / 2,
+		WindowPosCenterX,
+		WindowPosCenterY,
 		this->Data.vSize.x, this->Data.vSize.y, NULL, NULL, windowClass.hInstance, NULL );
 
 	SetWindowLongPtr( this->Data.hwnd, GWLP_USERDATA, ( LONG_PTR )this );
@@ -38,13 +41,19 @@ void CWindow::Create( ) {
 	ImGui::SetDPI( ImGui_ImplWin32_GetDpiScaleForHwnd( this->Data.hwnd ) );
 
 	this->Data.vSize *= ImGui::GetDPI( );
-	SetWindowPos( this->Data.hwnd, 0, 0, 0, this->Data.vSize.x, this->Data.vSize.y, SWP_NOMOVE );
+
+	WindowPosCenterX = desktop.right / 2 - this->Data.vSize.x / 2;
+	WindowPosCenterY = desktop.bottom / 2 - this->Data.vSize.y / 2;
+	SetWindowPos(
+		this->Data.hwnd, 0,
+		WindowPosCenterX, WindowPosCenterY,
+		this->Data.vSize.x, this->Data.vSize.y,
+		0 );
 
 	if ( !CreateDeviceD3D( this->Data.hwnd ) ) {
 		CleanupDeviceD3D( );
 		::UnregisterClass( windowClass.lpszClassName, windowClass.hInstance );
 		throw std::exception( "Failed to init D3DDevice" );
-		return;
 	}
 }
 

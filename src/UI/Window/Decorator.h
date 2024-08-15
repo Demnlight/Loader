@@ -7,6 +7,5 @@ public:
 protected:
 	struct DecoratorData_t {
 		ImGuiIO* io = nullptr;
-		float flDPIScale = 1.0f;
 	} DecoratorData;
 };

@@ -9,7 +9,13 @@
 const int DEFAULT_FONT_SIZE = 14;
 
 void CGUI::Render( ) {
-
+	ImGui::SetNextWindowPos( { 0, 0 } );
+	ImGui::SetNextWindowSize( this->RenderData.vWindowSize * ImGui::GetDPI( ) );
+	ImGui::Begin( ( "Laconism" ), 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoSavedSettings );
+	{
+		this->FormManager.GetCurrentForm( )->Render( );
+	}
+	ImGui::End( );
 }
 
 void CGUI::InitFonts( ) {
@@ -24,26 +30,20 @@ void CGUI::InitFonts( ) {
 
 	ImFontAtlas* Fonts = ImGui::GetIO( ).Fonts;
 
-	this->RenderData.aFontsPointers.push_back( 
-		Fonts->AddFontFromMemoryCompressedTTF( 
-			sfpro_compressed_data, sfpro_compressed_size,
-			DEFAULT_FONT_SIZE * this->RenderData.flDPIScale,
-			&m_cFont, ranges )
-	);
+	Fonts->AddFontFromMemoryCompressedTTF(
+		sfpro_compressed_data, sfpro_compressed_size,
+		DEFAULT_FONT_SIZE * ImGui::GetDPI( ),
+		&m_cFont, ranges );
 
-	this->RenderData.aFontsPointers.push_back(
-		Fonts->AddFontFromMemoryCompressedTTF(
-			sfpro_compressed_data, sfpro_compressed_size,
-			DEFAULT_FONT_SIZE * 2 * this->RenderData.flDPIScale,
-			&m_cFont, ranges )
-	);
+	Fonts->AddFontFromMemoryCompressedTTF(
+		sfpro_compressed_data, sfpro_compressed_size,
+		DEFAULT_FONT_SIZE * 2 * ImGui::GetDPI( ),
+		&m_cFont, ranges );
 
-	this->RenderData.aFontsPointers.push_back(
-		Fonts->AddFontFromMemoryCompressedTTF(
-			MenuIcons_compressed_data, MenuIcons_compressed_size,
-			DEFAULT_FONT_SIZE * 1.5f * this->RenderData.flDPIScale,
-			&m_cFont, ranges )
-	);
+	Fonts->AddFontFromMemoryCompressedTTF(
+		MenuIcons_compressed_data, MenuIcons_compressed_size,
+		DEFAULT_FONT_SIZE * 1.5f * ImGui::GetDPI( ),
+		&m_cFont, ranges );
 
 	Fonts->FontBuilderIO = ImGuiFreeType::GetBuilderForFreeType( );
 	Fonts->Build( );
@@ -112,8 +112,4 @@ void CGUI::InitColors( ) {
 	style->FrameRounding = 4.f;
 	style->ScrollbarSize = 10.f;
 	style->ScrollbarRounding = 12.f;
-}
-
-void CGUI::SetDPIScale( float& source ) {
-	this->RenderData.flDPIScale = source;
 }

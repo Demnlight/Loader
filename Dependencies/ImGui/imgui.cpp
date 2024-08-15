@@ -16263,6 +16263,14 @@ void ImGui::DebugHookIdInfo(ImGuiID, ImGuiDataType, const void*, const void*) {}
 
 #endif // #ifndef IMGUI_DISABLE_DEBUG_TOOLS
 
+float& ImGui::GetDPI( ) {
+    return GImGui->Style.flDPIScale;
+}
+
+void ImGui::SetDPI( float source ) {
+    GImGui->Style.flDPIScale = source;
+}
+
 //-----------------------------------------------------------------------------
 
 // Include imgui_user.inl at the end of imgui.cpp to access private data/functions that aren't exposed.

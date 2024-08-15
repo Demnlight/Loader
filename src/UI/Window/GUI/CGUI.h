@@ -2,16 +2,18 @@
 #include <vector>
 #include <Dependencies/ImGui/imgui.h>
 
+#include "CFormManager.h"
+
 class IGUIRender {
 public:
 	virtual void Render( ) = 0;
-	virtual void SetDPIScale( float& source ) = 0;
 
+public:
 	struct GUIRenderData_t {
-		std::vector<ImFont*> aFontsPointers;
-
-		float flDPIScale = 1.0f;
+		ImVec2 vWindowSize;
 	} RenderData;
+
+	CFormManager FormManager;
 };
 
 class IGUIData {
@@ -30,7 +32,6 @@ protected:
 class CGUI : public IGUI {
 public:
 	void Render( ) override;
-	void SetDPIScale( float& source ) override;
 	
 	void InitFonts( ) override;
 	void InitColors( ) override;

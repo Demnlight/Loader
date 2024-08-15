@@ -196,6 +196,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\UI\Window\GUI\Forms\Loading\CLoadingForm.cpp" />
+    <ClCompile Include="src\UI\Window\GUI\CFormManager.cpp" />
+    <ClCompile Include="src\UI\Window\GUI\Forms\Login\CLoginForm.cpp" />
     <ClCompile Include="src\UI\Window\GUI\CGUI.cpp" />
     <ClCompile Include="Dependencies\ImGui\backends\imgui_impl_dx9.cpp" />
     <ClCompile Include="Dependencies\ImGui\backends\imgui_impl_win32.cpp" />
@@ -210,6 +213,10 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\UI\Window\GUI\Forms\Loading\CLoadingForm.h" />
+    <ClInclude Include="src\UI\Window\GUI\CFormManager.h" />
+    <ClInclude Include="src\UI\Window\GUI\Forms\Login\CLoginForm.h" />
+    <ClInclude Include="src\UI\Window\GUI\IForm.h" />
     <ClInclude Include="Dependencies\Bytes\Fonts\MenuIcons.h" />
     <ClInclude Include="Dependencies\Bytes\Fonts\SFPRO.h" />
     <ClInclude Include="src\UI\Window\GUI\CGUI.h" />

@@ -6,6 +6,8 @@
 #include <Dependencies/ImGui/imgui_internal.h>
 
 void CWindow::Create( ) {
+	ImGui::CreateContext( );
+
 	RECT desktop;
 	const HWND hDesktop = GetDesktopWindow( );
 	GetWindowRect( hDesktop, &desktop );
@@ -31,10 +33,11 @@ void CWindow::Create( ) {
 		desktop.bottom / 2 - this->Data.vSize.y / 2,
 		this->Data.vSize.x, this->Data.vSize.y, NULL, NULL, windowClass.hInstance, NULL );
 
-	SetWindowLongPtr( this->Data.hwnd, GWLP_USERDATA, (LONG_PTR)this );
+	SetWindowLongPtr( this->Data.hwnd, GWLP_USERDATA, ( LONG_PTR )this );
 
-	this->DecoratorData.flDPIScale = ImGui_ImplWin32_GetDpiScaleForHwnd( this->Data.hwnd );
-	this->Data.vSize *= this->DecoratorData.flDPIScale;
+	ImGui::SetDPI( ImGui_ImplWin32_GetDpiScaleForHwnd( this->Data.hwnd ) );
+
+	this->Data.vSize *= ImGui::GetDPI( );
 	SetWindowPos( this->Data.hwnd, 0, 0, 0, this->Data.vSize.x, this->Data.vSize.y, SWP_NOMOVE );
 
 	if ( !CreateDeviceD3D( this->Data.hwnd ) ) {
@@ -62,7 +65,7 @@ void CWindow::Handler( ) {
 		ImGui_ImplWin32_NewFrame( );
 		ImGui::NewFrame( );
 		{
-
+			this->pGUI->Render( );
 		}
 		ImGui::EndFrame( );
 
@@ -93,14 +96,11 @@ void CWindow::Handler( ) {
 }
 
 void CWindow::SetupImGui( ) {
-	ImGui::CreateContext( );
 	this->DecoratorData.io = &ImGui::GetIO( );
 	this->DecoratorData.io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	this->DecoratorData.io->IniFilename = nullptr;
 
 	if ( this->pGUI ) {
-		this->pGUI->SetDPIScale( this->DecoratorData.flDPIScale );
-
 		this->pGUI->InitColors( );
 		this->pGUI->InitFonts( );
 	}
@@ -176,12 +176,12 @@ LRESULT WINAPI CWindow::WindowProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
 				this->Data.vPosition.x <= 200 &&
 				this->Data.vPosition.y >= 0 && this->Data.vPosition.y <= 19 )
 				SetWindowPos(
-				this->Data.hwnd,
-				HWND_TOPMOST,
-				rect.left,
-				rect.top,
-				0, 0,
-				SWP_SHOWWINDOW | SWP_NOSIZE | SWP_NOZORDER
+					this->Data.hwnd,
+					HWND_TOPMOST,
+					rect.left,
+					rect.top,
+					0, 0,
+					SWP_SHOWWINDOW | SWP_NOSIZE | SWP_NOZORDER
 				);
 		}
 
@@ -222,6 +222,8 @@ void CWindow::DeviceData_t::ResetDevice( ) {
 }
 
 void CWindow::SetupGUI( IGUI* source ) {
-	if ( source )
+	if ( source ) {
 		this->pGUI = source;
+		this->pGUI->RenderData.vWindowSize = ImVec2( static_cast< float >( this->Data.vSize.x ), static_cast< float >( this->Data.vSize.y ) );
+	}
 };

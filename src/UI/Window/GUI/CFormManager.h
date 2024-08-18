@@ -20,6 +20,7 @@ protected:
 class IFormManager : public IFormFabric {
 public:
 	virtual IForm* GetCurrentForm( ) = 0;
+	virtual void SetCurrentForm( FORMS_ID id ) = 0;
 protected:
 };
 
@@ -28,6 +29,7 @@ public:
 	CFormManager( );
 
 	IForm* GetCurrentForm( ) override;
+	void SetCurrentForm( FORMS_ID id ) override;
 
 private:
 	FORMS_ID eCurrentForm = FORMS_ID::CONNECTING;

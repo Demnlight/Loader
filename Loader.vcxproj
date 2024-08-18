@@ -140,7 +140,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;IMGUI_ENABLE_FREETYPE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;IMGUI_ENABLE_FREETYPE;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -196,6 +196,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Server Connection\CConnector.cpp" />
     <ClCompile Include="src\UI\Window\GUI\Forms\Connecting\CConnectingForm.cpp" />
     <ClCompile Include="src\UI\Window\GUI\ImGuiWrapper\CImGuiWrapper.cpp" />
     <ClCompile Include="src\UI\Window\GUI\Forms\Loading\CLoadingForm.cpp" />
@@ -215,6 +216,7 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Server Connection\CConnector.h" />
     <ClInclude Include="src\UI\Window\GUI\Forms\Connecting\CConnectingForm.h" />
     <ClInclude Include="src\UI\Window\GUI\ImGuiWrapper\CImGuiWrapper.h" />
     <ClInclude Include="src\UI\Window\GUI\Forms\Loading\CLoadingForm.h" />

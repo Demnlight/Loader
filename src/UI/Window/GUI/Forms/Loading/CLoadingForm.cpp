@@ -20,8 +20,10 @@ void CLoadingForm::Render( ) {
 	g_ImGuiWrapper->Spinner( this->LoadingLabel.c_str( ), ImGui::GetWindowWidth( ) / 4 * ImGui::GetDPI( ), static_cast< int >( 4.0f * ImGui::GetDPI( ) ), ImColor( 255, 255, 255, 255 ), wp + ws / 2 );
 }
 
-void CLoadingForm::Animate( ) {
+bool CLoadingForm::Animate( ) {
 	this->flAnimationTime += 1.0f * ImGui::GetIO( ).DeltaTime;
+
+	return true;
 }
 
 void CLoadingForm::Reset( ) {

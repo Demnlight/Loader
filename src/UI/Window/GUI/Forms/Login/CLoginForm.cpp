@@ -16,10 +16,14 @@ void CLoginForm::Render( ) {
 	ImVec2 wp = ImGui::GetWindowPos( );
 	ImVec2 ws = ImGui::GetWindowSize( );
 
+	ImGui::GetWindowDrawList( )->AddText( wp + ImVec2( 100, 100 ), ImColor( 255, 255, 255, 255 ), "GAY" );
+
 }
 
-void CLoginForm::Animate( ) {
+bool CLoginForm::Animate( ) {
 	this->flAnimationTime += 1.0f * ImGui::GetIO( ).DeltaTime;
+
+	return true;
 }
 
 void CLoginForm::Reset( ) {

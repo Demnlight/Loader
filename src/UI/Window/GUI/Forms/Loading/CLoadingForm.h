@@ -10,7 +10,7 @@ public:
 	void Render( ) override;
 
 	void Reset( ) override;
-	void Animate( ) override;
+	bool Animate( ) override;
 
 private:
 
